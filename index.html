@@ -22,9 +22,12 @@
 
     <script>
         let numbers = [];
+        let sortedNumbers = [];
+        let currentIndex = 0;
 
     function startNewGame() 
     {
+        currentIndex = 0;
         document.getElementById("startDiv").style.display = "none";
         document.getElementById("gameDiv").style.display = "block";
 
@@ -35,8 +38,17 @@
             let num = Math.floor(Math.random() * 9000) + 1000;
             numbers.push(num);
         }
-        showNumbers();
 
+        sortedNumbers = [...numbers];
+        sortedNumbers.sort(function(a, b) 
+        {
+            return a - b;
+        });
+        console.log("Original:", numbers);
+        console.log("Sorted:", sortedNumbers);
+
+        showNumbers();
+    
     console.log(numbers);
     }
 
@@ -49,9 +61,54 @@
         {
             let btn = document.createElement("button");
             btn.innerHTML = num;
+            btn.addEventListener("click", function () 
+            {
+                numberPressed(num, btn);
+            });
             panel.appendChild(btn);
         }
     }
+
+    function numberPressed(num, btn)
+        {
+            if (num === sortedNumbers[currentIndex]) 
+                {
+                    console.log("Correct!");
+                    btn.style.backgroundColor = "lightgreen";
+                    currentIndex++;
+                }
+                else 
+                {
+                    console.log("Wrong!");
+                    btn.style.backgroundColor = "red";
+                    playNote(293.66, 500);
+
+                    setTimeout(function() {
+                        btn.style.backgroundColor = "";
+                    }, 500);
+                 }        
+        }
+        function playNote(frequency = 440, duration = 1) {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            oscillator.type = 'sine';
+            oscillator.frequency.value = frequency;
+
+            gainNode.gain.setValueAtTime(1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(
+                0.0001,
+                audioCtx.currentTime + duration / 1000
+            );
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + duration);
+        }
     </script>
 
 </body>
