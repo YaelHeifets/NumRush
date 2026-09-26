@@ -3,8 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>NumRush</title>
+    <style>
+    #gameDiv {
+        display: none;
+    }
+    </style>
 </head>
 <body>
+
+    <div id="startDiv">
+        <h1>NumRush</h1>
+        <button onclick="startNewGame()">Start Game</button>
+    </div>
+
+    <div id="gameDiv">
+        <div id="numbersPanel"></div>
+    </div>
+
+    <script>
+        let numbers = [];
+
+    function startNewGame() 
+    {
+        document.getElementById("startDiv").style.display = "none";
+        document.getElementById("gameDiv").style.display = "block";
+
+        numbers = [];
+
+        for (let i = 0; i < 10; i++) 
+        {
+            let num = Math.floor(Math.random() * 9000) + 1000;
+            numbers.push(num);
+        }
+        showNumbers();
+
+    console.log(numbers);
+    }
+
+    function showNumbers() 
+    {
+        let panel = document.getElementById("numbersPanel");
+        panel.innerHTML = "";
+
+        for (let num of numbers) 
+        {
+            let btn = document.createElement("button");
+            btn.innerHTML = num;
+            panel.appendChild(btn);
+        }
+    }
+    </script>
 
 </body>
 </html>
