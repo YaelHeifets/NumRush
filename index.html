@@ -17,6 +17,7 @@
     </div>
 
     <div id="gameDiv">
+        <div id="timePanel">Time: 0</div>
         <div id="numbersPanel"></div>
     </div>
 
@@ -26,12 +27,18 @@
         let currentIndex = 0;
         let errorCount = 0;
         let gameOver = false;
+        let startTime;
+        let gameTime;
 
     function startNewGame() 
     {
         currentIndex = 0;
         errorCount = 0;
         gameOver = false;
+        startTime = Date.now();
+
+        console.log("Start time:", startTime);
+        document.getElementById("timePanel").innerHTML = "Time: 0";
         document.getElementById("startDiv").style.display = "none";
         document.getElementById("gameDiv").style.display = "block";
 
@@ -115,6 +122,14 @@
     function endGame(win)
     {
         gameOver = true;
+
+        gameTime = Date.now() - startTime;
+        gameTime = gameTime / 1000;
+
+        document.getElementById("timePanel").innerHTML =
+            "Time: " + gameTime.toFixed(2) + " seconds";
+
+        console.log("Game time:", gameTime);
 
         if (win)
         {
