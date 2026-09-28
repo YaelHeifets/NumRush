@@ -4,28 +4,330 @@
     <meta charset="UTF-8">
     <title>NumRush</title>
     <style>
+        body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e1b4b);
+    color: white;
+    }
+
+    #startDiv,
+    #gameDiv {
+    width: 700px;
+    max-width: 90%;
+    padding: 40px;
+    box-sizing: border-box;
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
     #gameDiv {
         display: none;
     }
+
+    h1 {
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 56px;
+    letter-spacing: 4px;
+    }
+
+    .tagline {
+    margin-top: -20px;
+    margin-bottom: 35px;
+    font-size: 18px;
+    color: #c4b5fd;
+    letter-spacing: 1px;
+    }
+
+    #playerName {
+    width: 280px;
+    max-width: 80%;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+
+    font-size: 16px;
+    color: white;
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    outline: none;
+    }
+
+    #playerName:focus {
+    border-color: #8b5cf6;
+    }
+
+    .mainButton {
+    display: block;
+    margin: 10px auto 0;
+    padding: 14px 32px;
+
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+
+    transition: transform 0.2s;
+}
+
+    .mainButton:hover {
+        transform: translateY(-2px);
+    }
+
+    #playerPanel {
+    margin-bottom: 25px;
+    font-size: 18px;
+    color: #c4b5fd;
+    }
+
+    .stats {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .statBox {
+        flex: 1;
+        padding: 18px 10px;
+
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .statLabel {
+        display: block;
+        margin-bottom: 8px;
+
+        font-size: 11px;
+        font-weight: normal;
+        letter-spacing: 2px;
+        color: #a78bfa;
+    }
+
+    #numbersPanel {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    margin: 35px 0;
+    }
+
+    #numbersPanel button {
+        padding: 20px 10px;
+
+        font-size: 22px;
+        font-weight: bold;
+        color: white;
+
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 14px;
+
+        cursor: pointer;
+        transition: transform 0.15s, background 0.15s;
+    }
+
+    #numbersPanel button:hover:not(:disabled) {
+        transform: translateY(-3px);
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    #numbersPanel button.correct {
+    background: rgba(34, 197, 94, 0.25);
+    border-color: #22c55e;
+    color: #86efac;
+    }
+
+    #numbersPanel button.wrong {
+        background: rgba(239, 68, 68, 0.25);
+        border-color: #ef4444;
+        color: #fca5a5;
+    }
+
+    #winPopup {
+    display: none;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(15, 23, 42, 0.85);
+    z-index: 1000;
+    }
+
+    .winBox {
+        width: 400px;
+        max-width: 80%;
+        padding: 50px 30px;
+
+        text-align: center;
+
+        background: #1e1b4b;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 24px;
+
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .winTitle {
+        margin-bottom: 20px;
+
+        font-size: 48px;
+        font-weight: bold;
+        color: #facc15;
+
+        letter-spacing: 3px;
+    }
+
+    #winTime {
+        margin-bottom: 25px;
+        font-size: 20px;
+        color: white;
+    }
+
+    .confettiPiece {
+    position: absolute;
+    top: -20px;
+
+    width: 10px;
+    height: 18px;
+
+    animation: fall 3s linear forwards;
+    }
+
+    @keyframes fall {
+        from {
+            transform: translateY(0) rotate(0deg);
+        }
+
+        to {
+            transform: translateY(110vh) rotate(720deg);
+        }
+    }
+
+    #losePopup {
+    display: none;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(15, 23, 42, 0.85);
+    z-index: 1000;
+    }
+
+    .loseBox {
+        width: 400px;
+        max-width: 80%;
+        padding: 50px 30px;
+
+        text-align: center;
+
+        background: #1e1b4b;
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        border-radius: 24px;
+
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .loseTitle {
+        margin-bottom: 20px;
+
+        font-size: 48px;
+        font-weight: bold;
+        color: #ef4444;
+
+        letter-spacing: 3px;
+    }
+
+    #loseTime {
+        margin-bottom: 25px;
+        font-size: 20px;
+        color: white;
+    }
+
     </style>
 </head>
 <body>
 
     <div id="startDiv">
         <h1>NumRush</h1>
-        <input type="text" id="playerName" placeholder="Enter your name">
-        <button onclick="startNewGame()">Start Game</button>
+        <p class="tagline">Think Fast. Click Smart.</p>
+        <input type="text" id="playerName" placeholder="Enter your name" autofocus>
+        <button class="mainButton" onclick="startNewGame()">Start Game</button>
     </div>
 
     <div id="gameDiv">
         <div id="playerPanel"></div>
-        <div id="timePanel">Time: 0</div>
-        <div id="bestTimePanel">Best Time: --</div>
-        <div id="errorPanel">Errors: 0/3</div>
+
+        <div class="stats">
+            <div class="statBox">
+                <span class="statLabel">TIME</span>
+                <div id="timePanel">0.00 sec</div>
+            </div>
+    
+            <div class="statBox">
+                <span class="statLabel">BEST</span>
+                <div id="bestTimePanel">--</div>
+            </div>
+
+            <div class="statBox">
+                <span class="statLabel">ERRORS</span>
+                <div id="errorPanel">0/3</div>
+            </div>
+        </div>
+
         <div id="numbersPanel"></div>
-        <button id="playAgainBtn" onclick="startNewGame()" style="display: none;">
+        <button id="playAgainBtn" class="mainButton"
+        onclick="startNewGame()" style="display: none;">
             Play Again
         </button>
+    </div>
+
+    <div id="winPopup">
+        <div id="confetti"></div>
+
+        <div class="winBox">
+            <div class="winTitle">YOU WON!</div>
+            <div id="winTime"></div>
+            <button class="mainButton" onclick="closeWinPopup()">Play Again</button>
+        </div>
+    </div>
+
+    <div id="losePopup">
+        <div class="loseBox">
+            <div class="loseTitle">GAME OVER</div>
+            <div id="loseTime"></div>
+            <button class="mainButton" onclick="closeLosePopup()">Try Again</button>
+        </div>
     </div>
 
     <script>
@@ -58,14 +360,13 @@
         currentIndex = 0;
         errorCount = 0;
 
-        document.getElementById("errorPanel").innerHTML = "Errors: 0/3";
+        document.getElementById("errorPanel").innerHTML = "0/3";
 
         gameOver = false;
         startTime = Date.now();
         updateTimer();
 
-        console.log("Start time:", startTime);
-        document.getElementById("timePanel").innerHTML = "Time: 0";
+        document.getElementById("timePanel").innerHTML = "0.00";
         document.getElementById("startDiv").style.display = "none";
         document.getElementById("gameDiv").style.display = "block";
 
@@ -86,12 +387,9 @@
         {
             return a - b;
         });
-        console.log("Original:", numbers);
-        console.log("Sorted:", sortedNumbers);
-
+        
         showNumbers();
     
-    console.log(numbers);
     }
 
     function showNumbers() 
@@ -117,14 +415,10 @@
             {
                 return;
             }
-
-            console.log("Pressed:", num);
-            console.log("Expected:", sortedNumbers[currentIndex]);
-            
+   
             if (num === sortedNumbers[currentIndex]) 
                 {
-                    console.log("Correct!");
-                    btn.style.backgroundColor = "lightgreen";
+                    btn.classList.add("correct");
                     btn.disabled = true;
                     currentIndex++;
                     if (currentIndex === numbers.length) 
@@ -137,20 +431,24 @@
                     errorCount++;
 
                     document.getElementById("errorPanel").innerHTML =
-                        "Errors: " + errorCount + "/3";
+                        errorCount + "/3";
 
-                    console.log("Wrong!");
-                    console.log("Errors:", errorCount);
-                    btn.style.backgroundColor = "red";
+                    btn.classList.add("wrong");
                     playNote(293.66, 500);
 
                      if (errorCount >= 3)
                         {
-                            endGame(false);
+                            gameOver = true;
+                            clearTimeout(timer);
+
+                            setTimeout(function()
+                            {
+                                endGame(false);
+                            }, 500);
                         }
 
                     setTimeout(function() {
-                        btn.style.backgroundColor = "";
+                        btn.classList.remove("wrong");
                     }, 500);
                  }        
         }
@@ -165,9 +463,7 @@
         gameTime = gameTime / 1000;
 
         document.getElementById("timePanel").innerHTML =
-            "Time: " + gameTime.toFixed(2) + " seconds";
-
-        console.log("Game time:", gameTime);
+            formatTime(gameTime);
 
         if (win)
         {
@@ -176,14 +472,27 @@
                 bestTime = gameTime;
 
                 document.getElementById("bestTimePanel").innerHTML =
-                    "Best Time: " + bestTime.toFixed(2) + " seconds";
+                    formatTime(bestTime);
             }
-            alert("You Won!");
+            document.getElementById("winTime").innerHTML =
+                "Your time: " + formatTime(gameTime);
+
+            document.getElementById("winPopup").style.display = "flex";
+            createConfetti();
         }
         else
         {
-            alert("Game Over!");
+            document.getElementById("loseTime").innerHTML =
+                "Your time: " + formatTime(gameTime);
+
+            document.getElementById("losePopup").style.display = "flex";
         }
+    }
+
+    function closeWinPopup()
+    {
+        document.getElementById("winPopup").style.display = "none";
+        startNewGame();
     }
         
     function playNote(frequency = 440, duration = 1) {
@@ -218,11 +527,61 @@
         currentTime = currentTime / 1000;
 
         document.getElementById("timePanel").innerHTML =
-            "Time: " + currentTime.toFixed(2) + " seconds";
+            formatTime(currentTime);
 
         timer = setTimeout(updateTimer, 100);
     }
 
+    function formatTime(time)
+    {
+        if (time < 60)
+        {
+            return time.toFixed(2) + " seconds";
+        }
+        else
+        {
+            return (time / 60).toFixed(2) + " minutes";
+        }
+    }
+
+    document.getElementById("playerName").addEventListener("keydown", function(event)
+    {
+        if (event.key === "Enter")
+        {
+            startNewGame();
+        }
+    });
+
+    function createConfetti()
+    {
+        let confetti = document.getElementById("confetti");
+        confetti.innerHTML = "";
+
+        let colors = ["#facc15", "#a78bfa", "#22c55e", "#38bdf8", "#f472b6"];
+
+        for (let i = 0; i < 60; i++)
+        {
+            let piece = document.createElement("div");
+
+            piece.classList.add("confettiPiece");
+
+            piece.style.left = Math.random() * 100 + "%";
+
+            piece.style.backgroundColor =
+                colors[Math.floor(Math.random() * colors.length)];
+
+            piece.style.animationDelay =
+                Math.random() * 1.5 + "s";
+
+            confetti.appendChild(piece);
+        }
+    }
+
+    function closeLosePopup()
+    {
+        document.getElementById("losePopup").style.display = "none";
+        startNewGame();
+    }
     </script>
 
 </body>
