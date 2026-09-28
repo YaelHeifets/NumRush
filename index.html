@@ -13,12 +13,15 @@
 
     <div id="startDiv">
         <h1>NumRush</h1>
+        <input type="text" id="playerName" placeholder="Enter your name">
         <button onclick="startNewGame()">Start Game</button>
     </div>
 
     <div id="gameDiv">
+        <div id="playerPanel"></div>
         <div id="timePanel">Time: 0</div>
         <div id="bestTimePanel">Best Time: --</div>
+        <div id="errorPanel">Errors: 0/3</div>
         <div id="numbersPanel"></div>
         <button id="playAgainBtn" onclick="startNewGame()" style="display: none;">
             Play Again
@@ -26,6 +29,8 @@
     </div>
 
     <script>
+
+        let playerName;
         let numbers = [];
         let sortedNumbers = [];
         let currentIndex = 0;
@@ -38,9 +43,23 @@
 
     function startNewGame() 
     {
+        playerName = document.getElementById("playerName").value;
+
+            if (playerName === "")
+            {
+                alert("Please enter your name");
+                return;
+            }
+        
+        document.getElementById("playerPanel").innerHTML =
+            "Player: " + playerName;
+
         document.getElementById("playAgainBtn").style.display = "none";
         currentIndex = 0;
         errorCount = 0;
+
+        document.getElementById("errorPanel").innerHTML = "Errors: 0/3";
+
         gameOver = false;
         startTime = Date.now();
         updateTimer();
@@ -116,6 +135,10 @@
                 else 
                 {
                     errorCount++;
+
+                    document.getElementById("errorPanel").innerHTML =
+                        "Errors: " + errorCount + "/3";
+
                     console.log("Wrong!");
                     console.log("Errors:", errorCount);
                     btn.style.backgroundColor = "red";
